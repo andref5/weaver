@@ -25,7 +25,7 @@ func (x *Order) WeaverMarshal(enc *codegen.Encoder) {
 	enc.String(x.ShippingTrackingID)
 	(x.ShippingCost).WeaverMarshal(enc)
 	(x.ShippingAddress).WeaverMarshal(enc)
-	serviceweaver_enc_slice_OrderItem_2b9377cb(enc, x.Items)
+	serviceweaver_enc_slice_OrderItem_9d9be1c1(enc, x.Items)
 }
 
 func (x *Order) WeaverUnmarshal(dec *codegen.Decoder) {
@@ -36,10 +36,10 @@ func (x *Order) WeaverUnmarshal(dec *codegen.Decoder) {
 	x.ShippingTrackingID = dec.String()
 	(&x.ShippingCost).WeaverUnmarshal(dec)
 	(&x.ShippingAddress).WeaverUnmarshal(dec)
-	x.Items = serviceweaver_dec_slice_OrderItem_2b9377cb(dec)
+	x.Items = serviceweaver_dec_slice_OrderItem_9d9be1c1(dec)
 }
 
-func serviceweaver_enc_slice_OrderItem_2b9377cb(enc *codegen.Encoder, arg []OrderItem) {
+func serviceweaver_enc_slice_OrderItem_9d9be1c1(enc *codegen.Encoder, arg []OrderItem) {
 	if arg == nil {
 		enc.Len(-1)
 		return
@@ -50,7 +50,7 @@ func serviceweaver_enc_slice_OrderItem_2b9377cb(enc *codegen.Encoder, arg []Orde
 	}
 }
 
-func serviceweaver_dec_slice_OrderItem_2b9377cb(dec *codegen.Decoder) []OrderItem {
+func serviceweaver_dec_slice_OrderItem_9d9be1c1(dec *codegen.Decoder) []OrderItem {
 	n := dec.Len()
 	if n == -1 {
 		return nil

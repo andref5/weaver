@@ -13,12 +13,12 @@ import (
 
 func init() {
 	codegen.Register(codegen.Registration{
-		Name:        "github.com/ServiceWeaver/weaver/examples/onlineboutique/productcatalogservice/T",
+		Name:        "github.com/ServiceWeaver/examples/onlineboutique/productcatalogservice/T",
 		Iface:       reflect.TypeOf((*T)(nil)).Elem(),
 		New:         func() any { return &impl{} },
 		LocalStubFn: func(impl any, tracer trace.Tracer) any { return t_local_stub{impl: impl.(T), tracer: tracer} },
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return t_client_stub{stub: stub, listProductsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/productcatalogservice/T", Method: "ListProducts"}), getProductMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/productcatalogservice/T", Method: "GetProduct"}), searchProductsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/productcatalogservice/T", Method: "SearchProducts"})}
+			return t_client_stub{stub: stub, listProductsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/productcatalogservice/T", Method: "ListProducts"}), getProductMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/productcatalogservice/T", Method: "GetProduct"}), searchProductsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/productcatalogservice/T", Method: "SearchProducts"})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return t_server_stub{impl: impl.(T), addLoad: addLoad}
@@ -134,7 +134,7 @@ func (s t_client_stub) ListProducts(ctx context.Context) (r0 []Product, err erro
 
 	// Decode the results.
 	dec := codegen.NewDecoder(results)
-	r0 = serviceweaver_dec_slice_Product_3e9d9e07(dec)
+	r0 = serviceweaver_dec_slice_Product_00b3519f(dec)
 	err = dec.Error()
 	return
 }
@@ -242,7 +242,7 @@ func (s t_client_stub) SearchProducts(ctx context.Context, a0 string) (r0 []Prod
 
 	// Decode the results.
 	dec := codegen.NewDecoder(results)
-	r0 = serviceweaver_dec_slice_Product_3e9d9e07(dec)
+	r0 = serviceweaver_dec_slice_Product_00b3519f(dec)
 	err = dec.Error()
 	return
 }
@@ -283,7 +283,7 @@ func (s t_server_stub) listProducts(ctx context.Context, args []byte) (res []byt
 
 	// Encode the results.
 	enc := codegen.NewEncoder()
-	serviceweaver_enc_slice_Product_3e9d9e07(enc, r0)
+	serviceweaver_enc_slice_Product_00b3519f(enc, r0)
 	enc.Error(appErr)
 	return enc.Data(), nil
 }
@@ -333,7 +333,7 @@ func (s t_server_stub) searchProducts(ctx context.Context, args []byte) (res []b
 
 	// Encode the results.
 	enc := codegen.NewEncoder()
-	serviceweaver_enc_slice_Product_3e9d9e07(enc, r0)
+	serviceweaver_enc_slice_Product_00b3519f(enc, r0)
 	enc.Error(appErr)
 	return enc.Data(), nil
 }
@@ -391,7 +391,7 @@ func serviceweaver_dec_slice_string_4af10117(dec *codegen.Decoder) []string {
 
 // Encoding/decoding implementations.
 
-func serviceweaver_enc_slice_Product_3e9d9e07(enc *codegen.Encoder, arg []Product) {
+func serviceweaver_enc_slice_Product_00b3519f(enc *codegen.Encoder, arg []Product) {
 	if arg == nil {
 		enc.Len(-1)
 		return
@@ -402,7 +402,7 @@ func serviceweaver_enc_slice_Product_3e9d9e07(enc *codegen.Encoder, arg []Produc
 	}
 }
 
-func serviceweaver_dec_slice_Product_3e9d9e07(dec *codegen.Decoder) []Product {
+func serviceweaver_dec_slice_Product_00b3519f(dec *codegen.Decoder) []Product {
 	n := dec.Len()
 	if n == -1 {
 		return nil

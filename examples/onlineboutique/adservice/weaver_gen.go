@@ -13,12 +13,12 @@ import (
 
 func init() {
 	codegen.Register(codegen.Registration{
-		Name:        "github.com/ServiceWeaver/weaver/examples/onlineboutique/adservice/T",
+		Name:        "github.com/ServiceWeaver/examples/onlineboutique/adservice/T",
 		Iface:       reflect.TypeOf((*T)(nil)).Elem(),
 		New:         func() any { return &impl{} },
 		LocalStubFn: func(impl any, tracer trace.Tracer) any { return t_local_stub{impl: impl.(T), tracer: tracer} },
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return t_client_stub{stub: stub, getAdsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/adservice/T", Method: "GetAds"})}
+			return t_client_stub{stub: stub, getAdsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/adservice/T", Method: "GetAds"})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return t_server_stub{impl: impl.(T), addLoad: addLoad}
@@ -101,7 +101,7 @@ func (s t_client_stub) GetAds(ctx context.Context, a0 []string) (r0 []Ad, err er
 
 	// Decode the results.
 	dec := codegen.NewDecoder(results)
-	r0 = serviceweaver_dec_slice_Ad_86ae3655(dec)
+	r0 = serviceweaver_dec_slice_Ad_2b8fe1d7(dec)
 	err = dec.Error()
 	return
 }
@@ -143,7 +143,7 @@ func (s t_server_stub) getAds(ctx context.Context, args []byte) (res []byte, err
 
 	// Encode the results.
 	enc := codegen.NewEncoder()
-	serviceweaver_enc_slice_Ad_86ae3655(enc, r0)
+	serviceweaver_enc_slice_Ad_2b8fe1d7(enc, r0)
 	enc.Error(appErr)
 	return enc.Data(), nil
 }
@@ -193,7 +193,7 @@ func serviceweaver_dec_slice_string_4af10117(dec *codegen.Decoder) []string {
 	return res
 }
 
-func serviceweaver_enc_slice_Ad_86ae3655(enc *codegen.Encoder, arg []Ad) {
+func serviceweaver_enc_slice_Ad_2b8fe1d7(enc *codegen.Encoder, arg []Ad) {
 	if arg == nil {
 		enc.Len(-1)
 		return
@@ -204,7 +204,7 @@ func serviceweaver_enc_slice_Ad_86ae3655(enc *codegen.Encoder, arg []Ad) {
 	}
 }
 
-func serviceweaver_dec_slice_Ad_86ae3655(dec *codegen.Decoder) []Ad {
+func serviceweaver_dec_slice_Ad_2b8fe1d7(dec *codegen.Decoder) []Ad {
 	n := dec.Len()
 	if n == -1 {
 		return nil

@@ -13,35 +13,91 @@ import (
 
 func init() {
 	codegen.Register(codegen.Registration{
-		Name:        "github.com/ServiceWeaver/weaver/examples/onlineboutique/cartservice/T",
+		Name:     "github.com/ServiceWeaver/examples/onlineboutique/cartservice/CartCache",
+		Iface:    reflect.TypeOf((*CartCache)(nil)).Elem(),
+		New:      func() any { return &cartCacheImpl{} },
+		ConfigFn: func(i any) any { return i.(*cartCacheImpl).WithConfig.Config() },
+		LocalStubFn: func(impl any, tracer trace.Tracer) any {
+			return cartCache_local_stub{impl: impl.(CartCache), tracer: tracer}
+		},
+		ClientStubFn: func(stub codegen.Stub, caller string) any {
+			return cartCache_client_stub{stub: stub, addMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/cartservice/CartCache", Method: "Add"}), getMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/cartservice/CartCache", Method: "Get"}), removeMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/cartservice/CartCache", Method: "Remove"})}
+		},
+		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
+			return cartCache_server_stub{impl: impl.(CartCache), addLoad: addLoad}
+		},
+	})
+	codegen.Register(codegen.Registration{
+		Name:        "github.com/ServiceWeaver/examples/onlineboutique/cartservice/T",
 		Iface:       reflect.TypeOf((*T)(nil)).Elem(),
 		New:         func() any { return &impl{} },
 		LocalStubFn: func(impl any, tracer trace.Tracer) any { return t_local_stub{impl: impl.(T), tracer: tracer} },
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return t_client_stub{stub: stub, addItemMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/cartservice/T", Method: "AddItem"}), getCartMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/cartservice/T", Method: "GetCart"}), emptyCartMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/cartservice/T", Method: "EmptyCart"})}
+			return t_client_stub{stub: stub, addItemMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/cartservice/T", Method: "AddItem"}), getCartMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/cartservice/T", Method: "GetCart"}), emptyCartMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/examples/onlineboutique/cartservice/T", Method: "EmptyCart"})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return t_server_stub{impl: impl.(T), addLoad: addLoad}
 		},
 	})
-	codegen.Register(codegen.Registration{
-		Name:   "github.com/ServiceWeaver/weaver/examples/onlineboutique/cartservice/cartCache",
-		Iface:  reflect.TypeOf((*cartCache)(nil)).Elem(),
-		New:    func() any { return &cartCacheImpl{} },
-		Routed: true,
-		LocalStubFn: func(impl any, tracer trace.Tracer) any {
-			return cartCache_local_stub{impl: impl.(cartCache), tracer: tracer}
-		},
-		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return cartCache_client_stub{stub: stub, addMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/cartservice/cartCache", Method: "Add"}), getMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/cartservice/cartCache", Method: "Get"}), removeMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "github.com/ServiceWeaver/weaver/examples/onlineboutique/cartservice/cartCache", Method: "Remove"})}
-		},
-		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
-			return cartCache_server_stub{impl: impl.(cartCache), addLoad: addLoad}
-		},
-	})
 }
 
 // Local stub implementations.
+
+type cartCache_local_stub struct {
+	impl   CartCache
+	tracer trace.Tracer
+}
+
+func (s cartCache_local_stub) Add(ctx context.Context, a0 string, a1 []CartItem) (err error) {
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "cartservice.CartCache.Add", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.Add(ctx, a0, a1)
+}
+
+func (s cartCache_local_stub) Get(ctx context.Context, a0 string) (r0 []CartItem, err error) {
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "cartservice.CartCache.Get", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.Get(ctx, a0)
+}
+
+func (s cartCache_local_stub) Remove(ctx context.Context, a0 string) (r0 bool, err error) {
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "cartservice.CartCache.Remove", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.Remove(ctx, a0)
+}
 
 type t_local_stub struct {
 	impl   T
@@ -99,63 +155,171 @@ func (s t_local_stub) EmptyCart(ctx context.Context, a0 string) (err error) {
 	return s.impl.EmptyCart(ctx, a0)
 }
 
-type cartCache_local_stub struct {
-	impl   cartCache
-	tracer trace.Tracer
-}
-
-func (s cartCache_local_stub) Add(ctx context.Context, a0 string, a1 []CartItem) (err error) {
-	span := trace.SpanFromContext(ctx)
-	if span.SpanContext().IsValid() {
-		// Create a child span for this method.
-		ctx, span = s.tracer.Start(ctx, "cartservice.cartCache.Add", trace.WithSpanKind(trace.SpanKindInternal))
-		defer func() {
-			if err != nil {
-				span.RecordError(err)
-				span.SetStatus(codes.Error, err.Error())
-			}
-			span.End()
-		}()
-	}
-
-	return s.impl.Add(ctx, a0, a1)
-}
-
-func (s cartCache_local_stub) Get(ctx context.Context, a0 string) (r0 []CartItem, err error) {
-	span := trace.SpanFromContext(ctx)
-	if span.SpanContext().IsValid() {
-		// Create a child span for this method.
-		ctx, span = s.tracer.Start(ctx, "cartservice.cartCache.Get", trace.WithSpanKind(trace.SpanKindInternal))
-		defer func() {
-			if err != nil {
-				span.RecordError(err)
-				span.SetStatus(codes.Error, err.Error())
-			}
-			span.End()
-		}()
-	}
-
-	return s.impl.Get(ctx, a0)
-}
-
-func (s cartCache_local_stub) Remove(ctx context.Context, a0 string) (r0 bool, err error) {
-	span := trace.SpanFromContext(ctx)
-	if span.SpanContext().IsValid() {
-		// Create a child span for this method.
-		ctx, span = s.tracer.Start(ctx, "cartservice.cartCache.Remove", trace.WithSpanKind(trace.SpanKindInternal))
-		defer func() {
-			if err != nil {
-				span.RecordError(err)
-				span.SetStatus(codes.Error, err.Error())
-			}
-			span.End()
-		}()
-	}
-
-	return s.impl.Remove(ctx, a0)
-}
-
 // Client stub implementations.
+
+type cartCache_client_stub struct {
+	stub          codegen.Stub
+	addMetrics    *codegen.MethodMetrics
+	getMetrics    *codegen.MethodMetrics
+	removeMetrics *codegen.MethodMetrics
+}
+
+func (s cartCache_client_stub) Add(ctx context.Context, a0 string, a1 []CartItem) (err error) {
+	// Update metrics.
+	start := time.Now()
+	s.addMetrics.Count.Add(1)
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "cartservice.CartCache.Add", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+		err = s.stub.WrapError(err)
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+			s.addMetrics.ErrorCount.Add(1)
+		}
+		span.End()
+
+		s.addMetrics.Latency.Put(float64(time.Since(start).Microseconds()))
+	}()
+
+	// Encode arguments.
+	enc := codegen.NewEncoder()
+	enc.String(a0)
+	serviceweaver_enc_slice_CartItem_04f384c1(enc, a1)
+	var shardKey uint64
+
+	// Call the remote method.
+	s.addMetrics.BytesRequest.Put(float64(len(enc.Data())))
+	var results []byte
+	results, err = s.stub.Run(ctx, 0, enc.Data(), shardKey)
+	if err != nil {
+		return
+	}
+	s.addMetrics.BytesReply.Put(float64(len(results)))
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
+	err = dec.Error()
+	return
+}
+
+func (s cartCache_client_stub) Get(ctx context.Context, a0 string) (r0 []CartItem, err error) {
+	// Update metrics.
+	start := time.Now()
+	s.getMetrics.Count.Add(1)
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "cartservice.CartCache.Get", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+		err = s.stub.WrapError(err)
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+			s.getMetrics.ErrorCount.Add(1)
+		}
+		span.End()
+
+		s.getMetrics.Latency.Put(float64(time.Since(start).Microseconds()))
+	}()
+
+	// Preallocate a buffer of the right size.
+	size := 0
+	size += (4 + len(a0))
+	enc := codegen.NewEncoder()
+	enc.Reset(size)
+
+	// Encode arguments.
+	enc.String(a0)
+	var shardKey uint64
+
+	// Call the remote method.
+	s.getMetrics.BytesRequest.Put(float64(len(enc.Data())))
+	var results []byte
+	results, err = s.stub.Run(ctx, 1, enc.Data(), shardKey)
+	if err != nil {
+		return
+	}
+	s.getMetrics.BytesReply.Put(float64(len(results)))
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
+	r0 = serviceweaver_dec_slice_CartItem_04f384c1(dec)
+	err = dec.Error()
+	return
+}
+
+func (s cartCache_client_stub) Remove(ctx context.Context, a0 string) (r0 bool, err error) {
+	// Update metrics.
+	start := time.Now()
+	s.removeMetrics.Count.Add(1)
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "cartservice.CartCache.Remove", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+		err = s.stub.WrapError(err)
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+			s.removeMetrics.ErrorCount.Add(1)
+		}
+		span.End()
+
+		s.removeMetrics.Latency.Put(float64(time.Since(start).Microseconds()))
+	}()
+
+	// Preallocate a buffer of the right size.
+	size := 0
+	size += (4 + len(a0))
+	enc := codegen.NewEncoder()
+	enc.Reset(size)
+
+	// Encode arguments.
+	enc.String(a0)
+	var shardKey uint64
+
+	// Call the remote method.
+	s.removeMetrics.BytesRequest.Put(float64(len(enc.Data())))
+	var results []byte
+	results, err = s.stub.Run(ctx, 2, enc.Data(), shardKey)
+	if err != nil {
+		return
+	}
+	s.removeMetrics.BytesReply.Put(float64(len(results)))
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
+	r0 = dec.Bool()
+	err = dec.Error()
+	return
+}
 
 type t_client_stub struct {
 	stub             codegen.Stub
@@ -195,7 +359,7 @@ func (s t_client_stub) AddItem(ctx context.Context, a0 string, a1 CartItem) (err
 	// Preallocate a buffer of the right size.
 	size := 0
 	size += (4 + len(a0))
-	size += serviceweaver_size_CartItem_e3591e56(&a1)
+	size += serviceweaver_size_CartItem_b03f9c9a(&a1)
 	enc := codegen.NewEncoder()
 	enc.Reset(size)
 
@@ -268,7 +432,7 @@ func (s t_client_stub) GetCart(ctx context.Context, a0 string) (r0 []CartItem, e
 
 	// Decode the results.
 	dec := codegen.NewDecoder(results)
-	r0 = serviceweaver_dec_slice_CartItem_7a7ff11c(dec)
+	r0 = serviceweaver_dec_slice_CartItem_04f384c1(dec)
 	err = dec.Error()
 	return
 }
@@ -326,180 +490,102 @@ func (s t_client_stub) EmptyCart(ctx context.Context, a0 string) (err error) {
 	return
 }
 
-type cartCache_client_stub struct {
-	stub          codegen.Stub
-	addMetrics    *codegen.MethodMetrics
-	getMetrics    *codegen.MethodMetrics
-	removeMetrics *codegen.MethodMetrics
-}
-
-func (s cartCache_client_stub) Add(ctx context.Context, a0 string, a1 []CartItem) (err error) {
-	// Update metrics.
-	start := time.Now()
-	s.addMetrics.Count.Add(1)
-
-	span := trace.SpanFromContext(ctx)
-	if span.SpanContext().IsValid() {
-		// Create a child span for this method.
-		ctx, span = s.stub.Tracer().Start(ctx, "cartservice.cartCache.Add", trace.WithSpanKind(trace.SpanKindClient))
-	}
-
-	defer func() {
-		// Catch and return any panics detected during encoding/decoding/rpc.
-		if err == nil {
-			err = codegen.CatchPanics(recover())
-		}
-		err = s.stub.WrapError(err)
-
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, err.Error())
-			s.addMetrics.ErrorCount.Add(1)
-		}
-		span.End()
-
-		s.addMetrics.Latency.Put(float64(time.Since(start).Microseconds()))
-	}()
-
-	// Encode arguments.
-	enc := codegen.NewEncoder()
-	enc.String(a0)
-	serviceweaver_enc_slice_CartItem_7a7ff11c(enc, a1)
-
-	// Set the shardKey.
-	var r cartCacheRouter
-	shardKey := _hashCartCache(r.Add(ctx, a0, a1))
-
-	// Call the remote method.
-	s.addMetrics.BytesRequest.Put(float64(len(enc.Data())))
-	var results []byte
-	results, err = s.stub.Run(ctx, 0, enc.Data(), shardKey)
-	if err != nil {
-		return
-	}
-	s.addMetrics.BytesReply.Put(float64(len(results)))
-
-	// Decode the results.
-	dec := codegen.NewDecoder(results)
-	err = dec.Error()
-	return
-}
-
-func (s cartCache_client_stub) Get(ctx context.Context, a0 string) (r0 []CartItem, err error) {
-	// Update metrics.
-	start := time.Now()
-	s.getMetrics.Count.Add(1)
-
-	span := trace.SpanFromContext(ctx)
-	if span.SpanContext().IsValid() {
-		// Create a child span for this method.
-		ctx, span = s.stub.Tracer().Start(ctx, "cartservice.cartCache.Get", trace.WithSpanKind(trace.SpanKindClient))
-	}
-
-	defer func() {
-		// Catch and return any panics detected during encoding/decoding/rpc.
-		if err == nil {
-			err = codegen.CatchPanics(recover())
-		}
-		err = s.stub.WrapError(err)
-
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, err.Error())
-			s.getMetrics.ErrorCount.Add(1)
-		}
-		span.End()
-
-		s.getMetrics.Latency.Put(float64(time.Since(start).Microseconds()))
-	}()
-
-	// Preallocate a buffer of the right size.
-	size := 0
-	size += (4 + len(a0))
-	enc := codegen.NewEncoder()
-	enc.Reset(size)
-
-	// Encode arguments.
-	enc.String(a0)
-
-	// Set the shardKey.
-	var r cartCacheRouter
-	shardKey := _hashCartCache(r.Get(ctx, a0))
-
-	// Call the remote method.
-	s.getMetrics.BytesRequest.Put(float64(len(enc.Data())))
-	var results []byte
-	results, err = s.stub.Run(ctx, 1, enc.Data(), shardKey)
-	if err != nil {
-		return
-	}
-	s.getMetrics.BytesReply.Put(float64(len(results)))
-
-	// Decode the results.
-	dec := codegen.NewDecoder(results)
-	r0 = serviceweaver_dec_slice_CartItem_7a7ff11c(dec)
-	err = dec.Error()
-	return
-}
-
-func (s cartCache_client_stub) Remove(ctx context.Context, a0 string) (r0 bool, err error) {
-	// Update metrics.
-	start := time.Now()
-	s.removeMetrics.Count.Add(1)
-
-	span := trace.SpanFromContext(ctx)
-	if span.SpanContext().IsValid() {
-		// Create a child span for this method.
-		ctx, span = s.stub.Tracer().Start(ctx, "cartservice.cartCache.Remove", trace.WithSpanKind(trace.SpanKindClient))
-	}
-
-	defer func() {
-		// Catch and return any panics detected during encoding/decoding/rpc.
-		if err == nil {
-			err = codegen.CatchPanics(recover())
-		}
-		err = s.stub.WrapError(err)
-
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, err.Error())
-			s.removeMetrics.ErrorCount.Add(1)
-		}
-		span.End()
-
-		s.removeMetrics.Latency.Put(float64(time.Since(start).Microseconds()))
-	}()
-
-	// Preallocate a buffer of the right size.
-	size := 0
-	size += (4 + len(a0))
-	enc := codegen.NewEncoder()
-	enc.Reset(size)
-
-	// Encode arguments.
-	enc.String(a0)
-
-	// Set the shardKey.
-	var r cartCacheRouter
-	shardKey := _hashCartCache(r.Remove(ctx, a0))
-
-	// Call the remote method.
-	s.removeMetrics.BytesRequest.Put(float64(len(enc.Data())))
-	var results []byte
-	results, err = s.stub.Run(ctx, 2, enc.Data(), shardKey)
-	if err != nil {
-		return
-	}
-	s.removeMetrics.BytesReply.Put(float64(len(results)))
-
-	// Decode the results.
-	dec := codegen.NewDecoder(results)
-	r0 = dec.Bool()
-	err = dec.Error()
-	return
-}
-
 // Server stub implementations.
+
+type cartCache_server_stub struct {
+	impl    CartCache
+	addLoad func(key uint64, load float64)
+}
+
+// GetStubFn implements the stub.Server interface.
+func (s cartCache_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
+	switch method {
+	case "Add":
+		return s.add
+	case "Get":
+		return s.get
+	case "Remove":
+		return s.remove
+	default:
+		return nil
+	}
+}
+
+func (s cartCache_server_stub) add(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// Decode arguments.
+	dec := codegen.NewDecoder(args)
+	var a0 string
+	a0 = dec.String()
+	var a1 []CartItem
+	a1 = serviceweaver_dec_slice_CartItem_04f384c1(dec)
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	appErr := s.impl.Add(ctx, a0, a1)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
+
+func (s cartCache_server_stub) get(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// Decode arguments.
+	dec := codegen.NewDecoder(args)
+	var a0 string
+	a0 = dec.String()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	r0, appErr := s.impl.Get(ctx, a0)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
+	serviceweaver_enc_slice_CartItem_04f384c1(enc, r0)
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
+
+func (s cartCache_server_stub) remove(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// Decode arguments.
+	dec := codegen.NewDecoder(args)
+	var a0 string
+	a0 = dec.String()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	r0, appErr := s.impl.Remove(ctx, a0)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
+	enc.Bool(r0)
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
 
 type t_server_stub struct {
 	impl    T
@@ -566,7 +652,7 @@ func (s t_server_stub) getCart(ctx context.Context, args []byte) (res []byte, er
 
 	// Encode the results.
 	enc := codegen.NewEncoder()
-	serviceweaver_enc_slice_CartItem_7a7ff11c(enc, r0)
+	serviceweaver_enc_slice_CartItem_04f384c1(enc, r0)
 	enc.Error(appErr)
 	return enc.Data(), nil
 }
@@ -595,107 +681,6 @@ func (s t_server_stub) emptyCart(ctx context.Context, args []byte) (res []byte, 
 	return enc.Data(), nil
 }
 
-type cartCache_server_stub struct {
-	impl    cartCache
-	addLoad func(key uint64, load float64)
-}
-
-// GetStubFn implements the stub.Server interface.
-func (s cartCache_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
-	switch method {
-	case "Add":
-		return s.add
-	case "Get":
-		return s.get
-	case "Remove":
-		return s.remove
-	default:
-		return nil
-	}
-}
-
-func (s cartCache_server_stub) add(ctx context.Context, args []byte) (res []byte, err error) {
-	// Catch and return any panics detected during encoding/decoding/rpc.
-	defer func() {
-		if err == nil {
-			err = codegen.CatchPanics(recover())
-		}
-	}()
-
-	// Decode arguments.
-	dec := codegen.NewDecoder(args)
-	var a0 string
-	a0 = dec.String()
-	var a1 []CartItem
-	a1 = serviceweaver_dec_slice_CartItem_7a7ff11c(dec)
-	var r cartCacheRouter
-	s.addLoad(_hashCartCache(r.Add(ctx, a0, a1)), 1.0)
-
-	// TODO(rgrandl): The deferred function above will recover from panics in the
-	// user code: fix this.
-	// Call the local method.
-	appErr := s.impl.Add(ctx, a0, a1)
-
-	// Encode the results.
-	enc := codegen.NewEncoder()
-	enc.Error(appErr)
-	return enc.Data(), nil
-}
-
-func (s cartCache_server_stub) get(ctx context.Context, args []byte) (res []byte, err error) {
-	// Catch and return any panics detected during encoding/decoding/rpc.
-	defer func() {
-		if err == nil {
-			err = codegen.CatchPanics(recover())
-		}
-	}()
-
-	// Decode arguments.
-	dec := codegen.NewDecoder(args)
-	var a0 string
-	a0 = dec.String()
-	var r cartCacheRouter
-	s.addLoad(_hashCartCache(r.Get(ctx, a0)), 1.0)
-
-	// TODO(rgrandl): The deferred function above will recover from panics in the
-	// user code: fix this.
-	// Call the local method.
-	r0, appErr := s.impl.Get(ctx, a0)
-
-	// Encode the results.
-	enc := codegen.NewEncoder()
-	serviceweaver_enc_slice_CartItem_7a7ff11c(enc, r0)
-	enc.Error(appErr)
-	return enc.Data(), nil
-}
-
-func (s cartCache_server_stub) remove(ctx context.Context, args []byte) (res []byte, err error) {
-	// Catch and return any panics detected during encoding/decoding/rpc.
-	defer func() {
-		if err == nil {
-			err = codegen.CatchPanics(recover())
-		}
-	}()
-
-	// Decode arguments.
-	dec := codegen.NewDecoder(args)
-	var a0 string
-	a0 = dec.String()
-	var r cartCacheRouter
-	s.addLoad(_hashCartCache(r.Remove(ctx, a0)), 1.0)
-
-	// TODO(rgrandl): The deferred function above will recover from panics in the
-	// user code: fix this.
-	// Call the local method.
-	r0, appErr := s.impl.Remove(ctx, a0)
-
-	// Encode the results.
-	enc := codegen.NewEncoder()
-	enc.Bool(r0)
-	enc.Error(appErr)
-	return enc.Data(), nil
-}
-
 // AutoMarshal implementations.
 
 var _ codegen.AutoMarshal = &CartItem{}
@@ -716,25 +701,9 @@ func (x *CartItem) WeaverUnmarshal(dec *codegen.Decoder) {
 	x.Quantity = dec.Int32()
 }
 
-// Router methods.
-
-// _hashCartCache returns a 64 bit hash of the provided value.
-func _hashCartCache(r string) uint64 {
-	var h codegen.Hasher
-	h.WriteString(string(r))
-	return h.Sum64()
-}
-
-// _orderedCodeCartCache returns an order-preserving serialization of the provided value.
-func _orderedCodeCartCache(r string) codegen.OrderedCode {
-	var enc codegen.OrderedEncoder
-	enc.WriteString(string(r))
-	return enc.Encode()
-}
-
 // Encoding/decoding implementations.
 
-func serviceweaver_enc_slice_CartItem_7a7ff11c(enc *codegen.Encoder, arg []CartItem) {
+func serviceweaver_enc_slice_CartItem_04f384c1(enc *codegen.Encoder, arg []CartItem) {
 	if arg == nil {
 		enc.Len(-1)
 		return
@@ -745,7 +714,7 @@ func serviceweaver_enc_slice_CartItem_7a7ff11c(enc *codegen.Encoder, arg []CartI
 	}
 }
 
-func serviceweaver_dec_slice_CartItem_7a7ff11c(dec *codegen.Decoder) []CartItem {
+func serviceweaver_dec_slice_CartItem_04f384c1(dec *codegen.Decoder) []CartItem {
 	n := dec.Len()
 	if n == -1 {
 		return nil
@@ -759,9 +728,9 @@ func serviceweaver_dec_slice_CartItem_7a7ff11c(dec *codegen.Decoder) []CartItem 
 
 // Size implementations.
 
-// serviceweaver_size_CartItem_e3591e56 returns the size (in bytes) of the serialization
+// serviceweaver_size_CartItem_b03f9c9a returns the size (in bytes) of the serialization
 // of the provided type.
-func serviceweaver_size_CartItem_e3591e56(x *CartItem) int {
+func serviceweaver_size_CartItem_b03f9c9a(x *CartItem) int {
 	size := 0
 	size += 0
 	size += (4 + len(x.ProductID))

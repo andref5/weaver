@@ -23,11 +23,11 @@ import (
 
 type cartStore struct {
 	component weaver.Instance
-	cache     cartCache
+	cache     CartCache
 }
 
 func newCartStore(component weaver.Instance) (*cartStore, error) {
-	cache, err := weaver.Get[cartCache](component)
+	cache, err := weaver.Get[CartCache](component)
 	if err != nil {
 		return nil, err
 	}
